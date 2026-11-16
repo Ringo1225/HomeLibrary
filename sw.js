@@ -1,5 +1,5 @@
 // Bump VERSION (and the ?v= on style.css/app.js in index.html) when app shell files change.
-const VERSION = 'v5';
+const VERSION = 'v6';
 const SHELL = [
   './', 'index.html', 'style.css?v=5', 'app.js?v=5', 'vendor/pinyin-pro.js',
   'manifest.webmanifest', 'icons/icon-192.png?v=4', 'icons/icon-512.png?v=4', 'icons/apple-touch-icon.png?v=4',
@@ -33,7 +33,18 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // App shell: stale-while-revalidate.
+  // Page loads: network first, so a fresh deploy (new ?v= asset URLs) shows up on the next open.
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request).then((res) => {
+        if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put('index.html', copy)); }
+        return res;
+      }).catch(() => caches.match('index.html')),
+    );
+    return;
+  }
+
+  // Other app shell files (versioned by ?v=): stale-while-revalidate.
   e.respondWith(
     caches.match(e.request).then((hit) => {
       const net = fetch(e.request).then((res) => {
