@@ -99,7 +99,7 @@
     const base = CAT[b.category] || CAT['其他']; const h = hash(b.series || b.title);
     const sh = [0, .16, -.14, .3, -.26][h % 5];
     const c = sh >= 0 ? mix(base, '#ffffff', sh) : mix(base, '#000000', -sh);
-    return { c, t: lum(c) > .36 ? '#1c1c1e' : '#ffffff' };
+    return { c, t: lum(c) > .18 ? '#1c1c1e' : '#ffffff' };
   }
   function spine(b, i = 0) {
     const h = hash(b.id + b.title);
@@ -117,10 +117,11 @@
   function cover(b, { caption = true } = {}) {
     const len = [...b.title].length;
     const fs = len <= 4 ? 17 : len <= 8 ? 15 : len <= 14 ? 13 : 12;
-    return `<button class="cv" data-book="${b.id}" style="--c1:${b._p.c1};--c2:${b._p.c2};--ct:${b._p.ct};--fs:${fs}px" aria-label="${esc(b.title)}">
+    const tag = caption ? 'button' : 'div';
+    return `<${tag} class="cv"${caption ? ` data-book="${b.id}" aria-label="${esc(b.title)}"` : ' aria-hidden="true"'} style="--c1:${b._p.c1};--c2:${b._p.c2};--ct:${b._p.ct};--fs:${fs}px">
       <div class="art"><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div>
       ${b.volume ? `<div class="vol num">${b.volume}</div>` : ''}${b.status === 'wanted' ? '<div class="flag">想买</div>' : b.confidence === 'low' ? '<div class="flag">待核对</div>' : ''}</div>
-      ${caption ? `<div class="cap">${esc(b.title)}</div><div class="cap2">${esc(b.author || b.publisher || '')}</div>` : ''}</button>`;
+      ${caption ? `<div class="cap">${esc(b.title)}</div><div class="cap2">${esc(b.author || b.publisher || '')}</div>` : ''}</${tag}>`;
   }
   function row(b, rawQ = '') {
     const first = [...(b.title.replace(/^[《「“"(（\s]+/, '') || '书')][0];
@@ -142,8 +143,8 @@
       const badge = k === 'wanted' ? wantCount() : 0;
       return { k, l, badge };
     });
-    $('#tabbar').innerHTML = nav.map(({ k, l, badge }) => `<button class="tab${state.tab === k ? ' on' : ''}" data-tab="${k}" aria-label="${l}">${ICONS[k]}<span>${l}</span>${badge ? `<i class="badge">${badge}</i>` : ''}</button>`).join('');
-    $('#sideNav').innerHTML = nav.map(({ k, l, badge }) => `<button class="${state.tab === k ? 'on' : ''}" data-tab="${k}"><span class="ic">${ICONS[k]}</span>${l}${badge ? `<span style="margin-left:auto;font-size:12px;opacity:.7">${badge}</span>` : ''}</button>`).join('');
+    $('#tabbar').innerHTML = nav.map(({ k, l, badge }) => `<button class="tab${state.tab === k ? ' on' : ''}" data-tab="${k}" aria-label="${l}"${state.tab === k ? ' aria-current="page"' : ''}>${ICONS[k]}<span>${l}</span>${badge ? `<i class="badge">${badge}</i>` : ''}</button>`).join('');
+    $('#sideNav').innerHTML = nav.map(({ k, l, badge }) => `<button class="${state.tab === k ? 'on' : ''}" data-tab="${k}"${state.tab === k ? ' aria-current="page"' : ''}><span class="ic">${ICONS[k]}</span>${l}${badge ? `<span style="margin-left:auto;font-size:12px;opacity:.7">${badge}</span>` : ''}</button>`).join('');
     const owned = state.books.filter((b) => b.status === 'owned').length;
     const H = {
       home: `<h1 class="hello">${greeting()}<br>今天读哪一本？</h1><p class="sub">家里一共 <b class="num">${owned}</b> 本书，<b class="num">${seriesInfo().length}</b> 套书</p>`,
@@ -179,7 +180,7 @@
         <button class="tile accent" data-go="wanted"><span class="ic">${ICONS.wanted}</span><span><span class="lab">套书还缺</span><span class="val num">${gapN}<small>册</small></span></span></button>
       </div>
 
-      <section class="card span-4">
+      <section class="card span-4 category-chart">
         <div class="chart-top">
           <div><div class="big num">${curN}<small>本</small></div><div class="cap">${esc(cur)}，占藏书 ${Math.round(curN / owned.length * 100)}%</div></div>
           <button class="go" data-cat-go="${esc(cur)}">看这 ${curN} 本</button>
@@ -219,7 +220,7 @@
       const own = list.filter((b) => b.status === 'owned').length; const want = list.length - own;
       html += own ? `<div class="card answer yes fade"><span class="ic"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></span><div><b>家里有</b><span>找到 ${own} 本相关的书${want ? `，另有 ${want} 本在想买清单` : ''}</span></div></div>`
         : want ? `<div class="card answer maybe fade"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12zM6 6 5 3H2"/></svg></span><div><b>还没买，已在想买清单</b><span>${want} 本</span></div></div>`
-        : `<div class="card answer no fade"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><div><b>家里没有这本</b><span>可以放心买。也可以试试搜作者或拼音首字母</span></div></div>`;
+        : `<div class="card answer no fade"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><div><b>家里没有这本</b><span>书目里没有匹配结果。也可以试试搜作者或拼音首字母</span></div></div>`;
       groups = list.length ? [['搜索结果', list]] : [];
     } else {
       const base = filtered({ ignoreCats: true }); const counts = countBy(base, (b) => b.category || '未分类');
@@ -230,8 +231,8 @@
       groups = [...g.entries()];
       if (state.sort === 'pub') groups.sort((a, b) => b[1].length - a[1].length);
       if (SORTS[state.sort].rail) groups.sort((a, b) => (a[0] === '#') - (b[0] === '#') || cmp(a[0], b[0]));
-      html += `<div class="tools"><span class="count"><b class="num">${list.length}</b> 本</span><span class="seg sortseg" role="radiogroup" aria-label="排序">${Object.entries(SORTS).map(([k, s]) => `<button class="${state.sort === k ? 'on' : ''}" data-sort="${k}">${s.label}</button>`).join('')}</span>
-        <span class="seg" role="radiogroup" aria-label="显示方式"><button class="${state.view === 'shelf' ? 'on' : ''}" data-view="shelf" aria-label="书脊"><svg viewBox="0 0 24 24"><path d="M5 4h3v16H5zM10 4h3v16h-3zM15.5 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg></button><button class="${state.view === 'list' ? 'on' : ''}" data-view="list" aria-label="列表"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg></button><button class="${state.view === 'grid' ? 'on' : ''}" data-view="grid" aria-label="封面"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></button></span></div>`;
+      html += `<div class="tools"><span class="count"><b class="num">${list.length}</b> 本</span><span class="seg sortseg" role="group" aria-label="排序">${Object.entries(SORTS).map(([k, s]) => `<button class="${state.sort === k ? 'on' : ''}" aria-pressed="${state.sort === k}" data-sort="${k}">${s.label}</button>`).join('')}</span>
+        <span class="seg" role="group" aria-label="显示方式"><button class="${state.view === 'shelf' ? 'on' : ''}" aria-pressed="${state.view === 'shelf'}" data-view="shelf" aria-label="书脊"><svg viewBox="0 0 24 24"><path d="M5 4h3v16H5zM10 4h3v16h-3zM15.5 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg></button><button class="${state.view === 'list' ? 'on' : ''}" aria-pressed="${state.view === 'list'}" data-view="list" aria-label="列表"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg></button><button class="${state.view === 'grid' ? 'on' : ''}" aria-pressed="${state.view === 'grid'}" data-view="grid" aria-label="封面"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></button></span></div>`;
       const pills = [];
       if (state.status !== 'owned') pills.push(`<button class="pill" data-unset="status">${{ all: '全部状态', wanted: '想买', low: '待核对' }[state.status]}${X}</button>`);
       if (state.cats.size > 1) state.cats.forEach((c) => pills.push(`<button class="pill" data-unset-cat="${esc(c)}">${esc(c)}${X}</button>`));
@@ -272,7 +273,7 @@
     const all = seriesInfo().filter((s) => !q || norm(s.name + s.author).includes(q) || (/^[a-z0-9]+$/.test(q) && (s._py.includes(q) || s._first.includes(q))));
     const G = { all, miss: all.filter((s) => s.missing.length), done: all.filter((s) => s.total && !s.missing.length), unk: all.filter((s) => !s.total) };
     const L = { all: '全部', miss: '缺册', done: '已齐', unk: '册数未知' };
-    $('#main').innerHTML = `<span class="seg" style="margin-top:4px">${Object.keys(L).map((k) => `<button class="${state.seriesFilter === k ? 'on' : ''}" data-sf="${k}">${L[k]} ${G[k].length}</button>`).join('')}</span>
+    $('#main').innerHTML = `<span class="seg series-filters" role="group" aria-label="套书状态">${Object.keys(L).map((k) => `<button class="${state.seriesFilter === k ? 'on' : ''}" aria-pressed="${state.seriesFilter === k}" data-sf="${k}">${L[k]} ${G[k].length}</button>`).join('')}</span>
       ${G[state.seriesFilter].length ? `<div class="series-grid">${G[state.seriesFilter].map(seriesCard).join('')}</div>` : '<div class="empty"><b>没有找到套书</b>换个关键词试试</div>'}`;
     hideRail();
   }
@@ -300,15 +301,86 @@
 
   // ---------- sheet ----------
   const sheet = $('#sheet'); const scrim = $('#scrim'); const body = $('#sheetBody'); let kind = null;
-  function openSheet(html, k) { body.innerHTML = html; body.scrollTop = 0; kind = k; sheet.classList.add('show'); scrim.classList.add('show'); sheet.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
-  function closeSheet() { if (!kind) return; sheet.classList.remove('show'); scrim.classList.remove('show'); sheet.setAttribute('aria-hidden', 'true'); sheet.style.transform = ''; document.body.style.overflow = ''; kind = null; }
+  const sheetClose = $('#sheetClose');
+  const shell = $('.shell'), tabbar = $('#tabbar'), rail = $('#rail');
+  const focus = (el) => el?.focus({ preventScroll: true });
+  let opener;
+  function labelSheet() {
+    const title = body.querySelector('h2');
+    title.id = 'sheetTitle';
+    title.tabIndex = -1;
+    return title;
+  }
+  function renderSheetContent(html) {
+    sheet.querySelector('.sheet-foot')?.remove();
+    body.innerHTML = html;
+    const foot = body.querySelector('.sheet-foot');
+    if (foot) sheet.append(foot);
+    return labelSheet();
+  }
+  function openSheet(html, k, trigger) {
+    if (!kind) opener = trigger || document.activeElement;
+    const title = renderSheetContent(html);
+    body.scrollTop = 0;
+    kind = k;
+    sheet.inert = false;
+    sheet.setAttribute('aria-hidden', 'false');
+    sheet.classList.add('show');
+    scrim.classList.add('show');
+    focus(title);
+    shell.inert = tabbar.inert = rail.inert = true;
+    document.documentElement.classList.add('sheet-open');
+    $('#filterBtn').setAttribute('aria-expanded', String(k === 'filter'));
+  }
+  function closeSheet() {
+    if (!kind) return;
+    kind = null;
+    shell.inert = tabbar.inert = rail.inert = false;
+    document.documentElement.classList.remove('sheet-open');
+    focus(opener?.isConnected && opener !== document.body ? opener : $('#q'));
+    sheet.inert = true;
+    sheet.setAttribute('aria-hidden', 'true');
+    sheet.classList.remove('show', 'dragging');
+    scrim.classList.remove('show');
+    sheet.style.transform = '';
+    $('#filterBtn').setAttribute('aria-expanded', 'false');
+  }
   scrim.addEventListener('click', closeSheet);
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeSheet());
+  sheetClose.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', (e) => {
+    if (!kind) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeSheet(); }
+    if (e.key !== 'Tab') return;
+    const controls = Array.from(sheet.querySelectorAll('button, a[href]'));
+    const at = controls.indexOf(document.activeElement);
+    if (at < 0 || (e.shiftKey ? at === 0 : at === controls.length - 1)) {
+      e.preventDefault();
+      focus(controls[e.shiftKey ? controls.length - 1 : 0]);
+      document.activeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  });
   (() => {
-    let y0 = null; let dy = 0;
-    sheet.addEventListener('pointerdown', (e) => { if (innerWidth >= 960 || e.target.closest('button,a,input')) return; if (e.target.closest('.grab') || body.scrollTop <= 0) { y0 = e.clientY; dy = 0; } });
-    addEventListener('pointermove', (e) => { if (y0 == null) return; dy = Math.max(0, e.clientY - y0); if (dy > 4) { sheet.classList.add('dragging'); sheet.style.transform = `translateY(${dy}px)`; } });
-    addEventListener('pointerup', () => { if (y0 == null) return; y0 = null; sheet.classList.remove('dragging'); if (dy > 110) closeSheet(); else sheet.style.transform = ''; });
+    const grab = $('.grab');
+    let pointer, y0, dy;
+    grab.addEventListener('pointerdown', (e) => {
+      if (!kind || matchMedia('(min-width: 960px)').matches || !e.isPrimary || e.button !== 0) return;
+      pointer = e.pointerId; y0 = e.clientY; dy = 0;
+      grab.setPointerCapture(pointer);
+      sheet.classList.add('dragging');
+    });
+    grab.addEventListener('pointermove', (e) => {
+      if (!kind || e.pointerId !== pointer) return;
+      dy = Math.max(0, e.clientY - y0);
+      sheet.style.transform = `translateY(${dy}px)`;
+    });
+    function finish(e) {
+      if (e.pointerId !== pointer) return;
+      pointer = undefined;
+      sheet.classList.remove('dragging');
+      if (e.type === 'pointerup' && dy > 100) closeSheet();
+      sheet.style.transform = '';
+    }
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((type) => grab.addEventListener(type, finish));
   })();
 
   function filterHtml() {
@@ -318,17 +390,17 @@
     const pc = countBy(filtered({ ignorePubs: true }), (b) => b.publisher || '未记录');
     let pubs = [...pc.keys()].sort((a, b) => (a === '未记录') - (b === '未记录') || pc.get(b) - pc.get(a));
     const more = pubs.length > 10 && !state.pubMore; if (more) pubs = [...new Set([...pubs.slice(0, 10), ...state.pubs])];
-    return `<h2>筛选和排序<button data-act="reset">重置</button></h2>
-      <div class="fs"><h3>排序</h3><div class="opts">${Object.entries(SORTS).map(([k, s]) => `<button class="opt${state.sort === k ? ' on' : ''}" data-sort="${k}">${s.label}</button>`).join('')}</div></div>
-      <div class="fs"><h3>状态</h3><div class="opts">${[['owned', '已有'], ['wanted', '想买'], ['low', '待核对'], ['all', '全部']].map(([k, l]) => `<button class="opt${state.status === k ? ' on' : ''}" data-status="${k}">${l}<span class="n num">${sc[k] || 0}</span></button>`).join('')}</div></div>
-      <div class="fs"><h3>分类（可多选）</h3><div class="opts">${cats.map((c) => `<button class="opt${state.cats.has(c) ? ' on' : ''}" data-fcat="${esc(c)}"><i style="background:${CAT[c] || CAT['其他']}"></i>${esc(c)}<span class="n num">${cc.get(c)}</span></button>`).join('')}</div></div>
-      <div class="fs"><h3>出版社</h3><div class="opts">${pubs.map((p) => `<button class="opt${state.pubs.has(p) ? ' on' : ''}" data-pub="${esc(p)}">${esc(p)}<span class="n num">${pc.get(p) || 0}</span></button>`).join('')}${more ? `<button class="opt more" data-act="more">还有 ${pc.size - 10} 家</button>` : ''}</div></div>
+    return `<h2>筛选和排序</h2>
+      <div class="fs"><h3>排序</h3><div class="opts">${Object.entries(SORTS).map(([k, s]) => `<button class="opt${state.sort === k ? ' on' : ''}" aria-pressed="${state.sort === k}" data-sort="${k}">${s.label}</button>`).join('')}</div></div>
+      <div class="fs"><h3>状态</h3><div class="opts">${[['owned', '已有'], ['wanted', '想买'], ['low', '待核对'], ['all', '全部']].map(([k, l]) => `<button class="opt${state.status === k ? ' on' : ''}" aria-pressed="${state.status === k}" data-status="${k}">${l}<span class="n num">${sc[k] || 0}</span></button>`).join('')}</div></div>
+      <div class="fs"><h3>分类（可多选）</h3><div class="opts">${cats.map((c) => `<button class="opt${state.cats.has(c) ? ' on' : ''}" aria-pressed="${state.cats.has(c)}" data-fcat="${esc(c)}"><i style="background:${CAT[c] || CAT['其他']}"></i>${esc(c)}<span class="n num">${cc.get(c)}</span></button>`).join('')}</div></div>
+      <div class="fs"><h3>出版社</h3><div class="opts">${pubs.map((p) => `<button class="opt${state.pubs.has(p) ? ' on' : ''}" aria-pressed="${state.pubs.has(p)}" data-pub="${esc(p)}">${esc(p)}<span class="n num">${pc.get(p) || 0}</span></button>`).join('')}${more ? `<button class="opt more" data-act="more">还有 ${pc.size - 10} 家</button>` : ''}</div></div>
       <div class="fs switch-row"><span>只看套书里的书</span><button class="switch${state.seriesOnly ? ' on' : ''}" data-act="series" role="switch" aria-checked="${state.seriesOnly}" aria-label="只看套书"></button></div>
       <div class="sheet-foot"><button class="btn sec" data-act="reset">重置</button><button class="btn pri" data-act="close">显示 ${filtered().length} 本</button></div>`;
   }
   const resetFilters = () => { state.status = 'owned'; state.cats.clear(); state.pubs.clear(); state.seriesOnly = false; };
 
-  function openBook(id) {
+  function openBook(id, trigger) {
     const b = state.byId.get(id); if (!b) return;
     const s = b.series ? seriesInfo().find((x) => x.name === b.series) : null;
     const same = b.author ? state.books.filter((x) => x.id !== b.id && x.author === b.author && (!s || x.series !== s.name)).slice(0, 20) : [];
@@ -341,17 +413,17 @@
         <div class="badges">${b.status === 'owned' ? '<span class="bd-pill ok">家里有</span>' : '<span class="bd-pill hot">想买</span>'}${b.confidence === 'low' ? '<span class="bd-pill hot">待核对</span>' : ''}</div></div></div>
       <div class="facts">${facts.map(([k, v, w]) => `<div class="fact${w ? ' wide' : ''}"><small>${k}</small><span>${v}</span></div>`).join('')}</div>
       ${s && s.members.length > 1 ? `<div class="rel"><h3>同一套</h3><div class="spine-strip">${s.members.map((x) => spine(x)).join('')}</div></div>` : ''}
-      ${same.length ? `<div class="rel"><h3>${esc(b.author)}的其他书</h3><div class="strip">${same.map((x) => cover(x)).join('')}</div></div>` : ''}`, 'book');
+      ${same.length ? `<div class="rel"><h3>${esc(b.author)}的其他书</h3><div class="strip">${same.map((x) => cover(x)).join('')}</div></div>` : ''}`, 'book', trigger);
   }
-  function openSeries(name) {
+  function openSeries(name, trigger) {
     const s = seriesInfo().find((x) => x.name === name); if (!s) return;
     openSheet(`<h2>${esc(s.name)}</h2>${seriesCard(s).replace('<button class="card set"', '<div class="card set" style="box-shadow:none;background:var(--card-hi)"').replace(/<\/button>\s*$/, '</div>')}
-      <div class="rel"><div class="spine-strip">${s.members.map((x) => spine(x)).join('')}</div></div><div class="rel"><h3>家里有的 ${s.owned.length} 册</h3><div class="list" style="padding:4px">${s.members.map((b) => row(b)).join('')}</div></div>`, 'series');
+      <div class="rel"><div class="spine-strip">${s.members.map((x) => spine(x)).join('')}</div></div><div class="rel"><h3>家里有的 ${s.owned.length} 册</h3><div class="list" style="padding:4px">${s.members.map((b) => row(b)).join('')}</div></div>`, 'series', trigger);
   }
 
-  body.addEventListener('click', (e) => {
+  sheet.addEventListener('click', (e) => {
     const a = e.target.closest('a[data-author-link],a[data-series-link]');
-    if (a) { e.preventDefault(); if (a.dataset.seriesLink) openSeries(a.dataset.seriesLink); else { closeSheet(); setQuery(a.dataset.authorLink); } return; }
+    if (a) { e.preventDefault(); if (a.dataset.seriesLink) openSeries(a.dataset.seriesLink); else { closeSheet(); state.tab = 'books'; setQuery(a.dataset.authorLink); if (e.detail === 0) focus(qEl); } return; }
     const t = e.target.closest('button'); if (!t) return; const d = t.dataset;
     if (d.book) return openBook(d.book);
     if (d.series) return openSeries(d.series);
@@ -364,28 +436,55 @@
     else if (d.act === 'more') state.pubMore = true;
     else if (d.act === 'reset') resetFilters();
     else if (d.act === 'close') { closeSheet(); if (state.tab !== 'books') go('books'); return; }
-    const st = body.scrollTop; body.innerHTML = filterHtml(); body.scrollTop = st; if (state.tab === 'books') render(); else renderChrome();
+    else return;
+    const st = body.scrollTop;
+    renderSheetContent(filterHtml());
+    body.scrollTop = st;
+    if (state.tab === 'books') render(); else renderChrome();
+    const [key, value] = Object.entries(d)[0];
+    focus([...sheet.querySelectorAll('button')].find((b) => b.dataset[key] === value) || sheet.querySelector('[data-act="close"]'));
   });
 
   // ---------- events ----------
   const qEl = $('#q');
-  function setQuery(v) { qEl.value = v; state.q = v; $('#searchBox').classList.toggle('has', !!v); if (state.tab === 'home') state.tab = 'books'; render(); window.scrollTo({ top: 0 }); }
   let tmr;
-  qEl.addEventListener('input', () => {
+  function setQuery(v) {
+    clearTimeout(tmr);
+    qEl.value = state.q = v;
+    $('#searchBox').classList.toggle('has', !!v);
+    if (v.trim() && state.tab === 'home') state.tab = 'books';
+    render();
+    window.scrollTo({ top: 0 });
+  }
+  function queueSearch(e) {
     $('#searchBox').classList.toggle('has', !!qEl.value);
-    clearTimeout(tmr); tmr = setTimeout(() => { state.q = qEl.value; if (state.q && state.tab === 'home') state.tab = 'books'; render(); }, 110);
+    clearTimeout(tmr);
+    if (!e.isComposing) tmr = setTimeout(() => setQuery(qEl.value), 110);
+  }
+  qEl.addEventListener('input', queueSearch);
+  qEl.addEventListener('compositionstart', () => clearTimeout(tmr));
+  qEl.addEventListener('compositionend', queueSearch);
+  qEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.isComposing) { setQuery(qEl.value); qEl.blur(); }
   });
   $('#clear').addEventListener('click', () => { setQuery(''); qEl.focus(); });
-  $('#filterBtn').addEventListener('click', () => openSheet(filterHtml(), 'filter'));
-  const onNav = (e) => { const b = e.target.closest('[data-tab]'); if (b && b.dataset.tab !== state.tab) go(b.dataset.tab); };
+  $('#filterBtn').addEventListener('click', (e) => openSheet(filterHtml(), 'filter', e.currentTarget));
+  const onNav = (e) => {
+    const b = e.target.closest('[data-tab]');
+    if (!b || b.dataset.tab === state.tab) return;
+    const nav = b.parentElement;
+    go(b.dataset.tab);
+    if (e.detail === 0) focus(nav.querySelector('[aria-current="page"]'));
+  };
   $('#tabbar').addEventListener('click', onNav); $('#sideNav').addEventListener('click', onNav);
   $('#skinBtn').addEventListener('click', () => { state.skin = state.skin === 'graphite' ? 'lavender' : 'graphite'; store.set('skin', state.skin); applySkin(); });
   function applySkin() { document.documentElement.setAttribute('data-skin', state.skin); document.querySelector('meta[name=theme-color]').content = getComputedStyle(document.documentElement).getPropertyValue('--bg1').trim(); }
 
   $('#main').addEventListener('click', (e) => {
-    const t = e.target.closest('button'); if (!t) return; const d = t.dataset;
-    if (d.book) openBook(d.book);
-    else if (d.series) openSeries(d.series);
+    const t = e.target.closest('button'); if (!t || !Object.keys(t.dataset).length) return; const d = t.dataset;
+    const chipScroll = $('.chips')?.scrollLeft;
+    if (d.book) openBook(d.book, t);
+    else if (d.series) openSeries(d.series, t);
     else if (d.go) go(d.go);
     else if (d.bar) { state.barCat = d.bar; renderHome(); }
     else if (d.catGo !== undefined) { state.cats = new Set([d.catGo]); state.status = 'owned'; go('books'); }
@@ -397,11 +496,18 @@
     else if (d.unset) { if (d.unset === 'all') resetFilters(); else if (d.unset === 'status') state.status = 'owned'; else state.seriesOnly = false; render(); }
     else if (d.unsetCat) { state.cats.delete(d.unsetCat); render(); }
     else if (d.unsetPub) { state.pubs.delete(d.unsetPub); render(); }
+    if (t.isConnected) return;
+    if (d.cat !== undefined && $('.chips')) $('.chips').scrollLeft = chipScroll;
+    if (e.detail === 0) {
+      const [key, value] = Object.entries(d)[0];
+      const next = [...$('#main').querySelectorAll('button')].find((b) => b.dataset[key] === value);
+      focus(next || $('#q'));
+    }
   });
   new IntersectionObserver(([en]) => $('#searchbar').classList.toggle('stuck', !en.isIntersecting), { threshold: 0 }).observe($('.head'));
   (() => {
     const rail = $('#rail'); const bub = $('#bubble'); let on = false; let last = '';
-    const hit = (y) => { const el = document.elementFromPoint(rail.getBoundingClientRect().left + 8, y); const g = el?.dataset?.g; if (!g || g === last) return; last = g; bub.textContent = g; bub.classList.add('show'); const sec = document.getElementById('g-' + g); if (sec) scrollTo({ top: sec.getBoundingClientRect().top + scrollY - 84 }); };
+    const hit = (y) => { const el = document.elementFromPoint(rail.getBoundingClientRect().left + 8, y); const g = el?.dataset?.g; if (!g || g === last) return; last = g; bub.textContent = g; bub.classList.add('show'); const sec = document.getElementById('g-' + g); if (sec) scrollTo({ top: sec.getBoundingClientRect().top + scrollY - $('#searchbar').offsetHeight - 12 }); };
     rail.addEventListener('pointerdown', (e) => { on = true; last = ''; rail.setPointerCapture(e.pointerId); hit(e.clientY); });
     rail.addEventListener('pointermove', (e) => on && hit(e.clientY));
     const end = () => { on = false; bub.classList.remove('show'); };
