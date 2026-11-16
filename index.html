@@ -4,62 +4,56 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>家庭书目</title>
-  <meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1a17" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ececee">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="家庭书目">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-  <header class="top">
-    <div class="title-row">
-      <h1>家庭书目</h1>
-      <span id="stats" class="stats"></span>
+<div class="shell layout">
+  <aside class="side" aria-label="导航">
+    <div class="brand"><i>书</i>家庭书目</div>
+    <nav id="sideNav"></nav>
+    <div class="tip"><b>录入新书</b>把书架照片发给 Claude，新书会自动加进来。</div>
+  </aside>
+
+  <div>
+    <header class="head">
+      <div class="head-top">
+        <div id="headText"></div>
+        <button class="skin-btn" id="skinBtn" type="button" aria-label="换一套配色"><span></span></button>
+      </div>
+    </header>
+    <div class="searchbar" id="searchbar">
+      <div class="search-row">
+        <label class="search" id="searchBox">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="买之前搜一下：书名、作者或拼音" aria-label="搜索书目">
+          <button class="clear" id="clear" type="button" aria-label="清空搜索"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </label>
+        <button class="fbtn" id="filterBtn" type="button" aria-label="筛选和排序"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span class="dot" id="filterDot"></span></button>
+      </div>
     </div>
-    <div class="search-wrap" id="searchWrap">
-      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-      <input id="q" type="search" inputmode="search" autocomplete="off"
-             placeholder="书名、作者、拼音或首字母" aria-label="搜索">
-    </div>
-  </header>
+    <main id="main"></main>
+  </div>
+</div>
 
-  <main>
-    <section id="view-books" class="view" data-view="books">
-      <div id="hint" class="hint" hidden></div>
-      <div id="chips" class="chips" role="tablist" aria-label="分类"></div>
-      <div id="bookList"></div>
-    </section>
+<div class="rail" id="rail" hidden></div>
+<div class="bubble" id="bubble"></div>
 
-    <section id="view-series" class="view" data-view="series" hidden>
-      <p class="intro">每套书已有几本、还缺哪几本。</p>
-      <div id="seriesList"></div>
-    </section>
+<nav class="tabbar" id="tabbar" aria-label="主导航"></nav>
 
-    <section id="view-wanted" class="view" data-view="wanted" hidden>
-      <div id="wantedList"></div>
-    </section>
-  </main>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="grab"></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
 
-  <nav class="tabbar" aria-label="主导航">
-    <button class="tab active" data-tab="books">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12"/></svg>
-      <span>书目</span>
-    </button>
-    <button class="tab" data-tab="series">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h3v16H5zM10.5 4h3v16h-3zM16 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg>
-      <span>套书</span>
-    </button>
-    <button class="tab" data-tab="wanted">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0-.01M18 20a1 1 0 1 0 0-.01"/></svg>
-      <span>想买</span>
-    </button>
-  </nav>
-
-  <script src="vendor/pinyin-pro.js"></script>
-  <script src="app.js"></script>
+<script src="vendor/pinyin-pro.js"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

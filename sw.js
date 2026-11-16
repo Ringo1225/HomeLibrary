@@ -1,7 +1,7 @@
-// Bump VERSION when app shell files change.
-const VERSION = 'v2';
+// Bump VERSION (and the ?v= on style.css/app.js in index.html) when app shell files change.
+const VERSION = 'v3';
 const SHELL = [
-  './', 'index.html', 'style.css', 'app.js', 'vendor/pinyin-pro.js',
+  './', 'index.html', 'style.css?v=3', 'app.js?v=3', 'vendor/pinyin-pro.js',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
 const DATA = ['data/books.json', 'data/series.json'];
