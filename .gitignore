@@ -1,0 +1,7 @@
+# Bookshelf photos stay local (large and private)
+photos/inbox/*
+photos/done/*
+!photos/inbox/.gitkeep
+!photos/done/.gitkeep
+.DS_Store
+.claude/

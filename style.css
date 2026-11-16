@@ -1,0 +1,136 @@
+:root {
+  --bg: #f6f1e7;
+  --surface: #fffdf8;
+  --ink: #2a251f;
+  --muted: #7a6f62;
+  --line: #e6ddcd;
+  --accent: #8a3b2a;
+  --accent-soft: #f1e1d8;
+  --ok: #3f6b45;
+  --ok-soft: #e1ecdf;
+  --warn: #9a6a12;
+  --warn-soft: #f5ead2;
+  --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+  --sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1a17; --surface: #262320; --ink: #ece5d8; --muted: #a39887; --line: #3a352f;
+    --accent: #e08d74; --accent-soft: #3d2a24; --ok: #8fc095; --ok-soft: #26352a;
+    --warn: #e0b45c; --warn-soft: #3a3020; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1a17; --surface: #262320; --ink: #ece5d8; --muted: #a39887; --line: #3a352f;
+  --accent: #e08d74; --accent-soft: #3d2a24; --ok: #8fc095; --ok-soft: #26352a;
+  --warn: #e0b45c; --warn-soft: #3a3020; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.5 var(--sans);
+  padding-bottom: calc(68px + env(safe-area-inset-bottom));
+}
+button { font: inherit; color: inherit; }
+
+/* Header */
+.top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--bg);
+  padding: calc(12px + env(safe-area-inset-top)) 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+h1 { font-family: var(--serif); font-size: 24px; margin: 0 0 8px; letter-spacing: .04em; }
+.stats { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.search-wrap { position: relative; }
+.search-wrap[hidden] { display: none; }
+.search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round;
+}
+#q {
+  width: 100%; padding: 10px 12px 10px 38px;
+  font-size: 16px; /* prevents iOS zoom */
+  border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface); color: var(--ink); outline: none;
+}
+#q:focus { border-color: var(--accent); }
+
+main { padding: 12px 16px 24px; max-width: 720px; margin: 0 auto; }
+.top .title-row, .top .search-wrap { max-width: 688px; margin-left: auto; margin-right: auto; }
+
+/* Chips */
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 10px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; border: 1px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 5px 12px; font-size: 14px; cursor: pointer;
+}
+.chip .n { color: var(--muted); margin-left: 4px; font-size: 12px; }
+.chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip.active .n { color: inherit; opacity: .7; }
+
+/* Hint banner */
+.hint { border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; font-size: 14px; }
+.hint.have { background: var(--ok-soft); color: var(--ok); }
+.hint.none { background: var(--warn-soft); color: var(--warn); }
+
+/* Book list */
+.group-title {
+  font-family: var(--serif); font-size: 15px; color: var(--muted);
+  margin: 16px 0 6px; display: flex; justify-content: space-between;
+}
+.group-title:first-child { margin-top: 4px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.book { padding: 11px 14px; border-top: 1px solid var(--line); }
+.book:first-child { border-top: 0; }
+.book .t { font-family: var(--serif); font-size: 17px; font-weight: 600; word-break: break-word; }
+.book .m { color: var(--muted); font-size: 13px; margin-top: 2px; word-break: break-word; }
+.book .note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.badge {
+  display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 500;
+  padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 2px;
+}
+.badge.wanted { background: var(--accent-soft); color: var(--accent); }
+.badge.low { background: var(--warn-soft); color: var(--warn); }
+.badge.vol { background: var(--line); color: var(--muted); }
+mark { background: var(--warn-soft); color: inherit; border-radius: 3px; padding: 0 1px; }
+
+.empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 14px; }
+.intro { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+
+/* Series */
+.series { padding: 14px; margin-bottom: 10px; }
+.series-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.series-head .t { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.series-head .count { font-size: 14px; color: var(--muted); white-space: nowrap; }
+.series-head .count.done { color: var(--ok); }
+.series .m { color: var(--muted); font-size: 13px; }
+.vols { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.vol {
+  min-width: 34px; height: 30px; padding: 0 8px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.vol.have { background: var(--ok-soft); color: var(--ok); }
+.vol.miss { background: transparent; color: var(--accent); border: 1.5px dashed var(--accent); }
+.vol.want { background: var(--accent-soft); color: var(--accent); }
+.series .miss-text { margin-top: 8px; font-size: 13px; color: var(--accent); }
+.series .unknown { margin-top: 8px; font-size: 13px; color: var(--warn); }
+
+/* Tab bar */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: flex; background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab {
+  flex: 1; background: none; border: 0; padding: 8px 0 6px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: var(--muted); font-size: 12px;
+}
+.tab svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round; }
+.tab.active { color: var(--accent); }

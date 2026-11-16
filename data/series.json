@@ -1,0 +1,19 @@
+[
+  { "name": "三体", "total": 3, "author": "刘慈欣", "publisher": "重庆出版社" },
+  { "name": "活法", "total": 5, "author": "稻盛和夫", "publisher": "东方出版社" },
+  { "name": "光荣与梦想", "total": 4, "author": "威廉·曼彻斯特", "publisher": "中信出版社" },
+  { "name": "半泽直树", "total": 4, "author": "池井户润", "publisher": "现代出版社" },
+  { "name": "南渡北归", "total": 3, "author": "岳南", "publisher": "湖南文艺出版社" },
+  { "name": "毛姆短篇小说全集", "total": 4, "author": "毛姆", "publisher": "广西师范大学出版社" },
+  { "name": "少有人走的路", "total": 4, "author": "M.斯科特·派克", "publisher": "中华工商联合出版社" },
+  { "name": "平凡的世界", "total": 3, "author": "路遥", "publisher": "华夏出版社" },
+  { "name": "刺杀骑士团长", "total": 2, "author": "村上春树", "publisher": "上海译文出版社" },
+  { "name": "阿城文集", "total": 7, "author": "阿城", "publisher": "江苏凤凰文艺出版社" },
+  { "name": "文化的江山", "total": 8, "author": "刘刚、李冬君", "publisher": "中信出版社" },
+  { "name": "法律、立法与自由", "total": 3, "author": "哈耶克", "publisher": "中国大百科全书出版社" },
+  { "name": "开放社会及其敌人", "total": 2, "author": "卡尔·波普尔", "publisher": "中国社会科学出版社" },
+  { "name": "美国对华情报解密档案", "total": 8, "author": "沈志华、杨奎松 主编", "publisher": "东方出版中心" },
+  { "name": "塔奇曼作品", "total": 8, "author": "巴巴拉·W.塔奇曼", "publisher": "中信出版社" },
+  { "name": "杨奎松著作集·革命", "total": 4, "author": "杨奎松", "publisher": "广西师范大学出版社" },
+  { "name": "龙应台人生三书", "total": 3, "author": "龙应台", "publisher": "广西师范大学出版社" }
+]

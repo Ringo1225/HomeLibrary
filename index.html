@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>家庭书目</title>
+  <meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1a17" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="家庭书目">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="title-row">
+      <h1>家庭书目</h1>
+      <span id="stats" class="stats"></span>
+    </div>
+    <div class="search-wrap" id="searchWrap">
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="q" type="search" inputmode="search" autocomplete="off"
+             placeholder="书名、作者、拼音或首字母" aria-label="搜索">
+    </div>
+  </header>
+
+  <main>
+    <section id="view-books" class="view" data-view="books">
+      <div id="hint" class="hint" hidden></div>
+      <div id="chips" class="chips" role="tablist" aria-label="分类"></div>
+      <div id="bookList"></div>
+    </section>
+
+    <section id="view-series" class="view" data-view="series" hidden>
+      <p class="intro">每套书已有几本、还缺哪几本。</p>
+      <div id="seriesList"></div>
+    </section>
+
+    <section id="view-wanted" class="view" data-view="wanted" hidden>
+      <div id="wantedList"></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="主导航">
+    <button class="tab active" data-tab="books">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12"/></svg>
+      <span>书目</span>
+    </button>
+    <button class="tab" data-tab="series">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h3v16H5zM10.5 4h3v16h-3zM16 5.2l2.9-.8 3.6 15.4-2.9.8z"/></svg>
+      <span>套书</span>
+    </button>
+    <button class="tab" data-tab="wanted">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12zM6 6 5 3H2M9 20a1 1 0 1 0 0-.01M18 20a1 1 0 1 0 0-.01"/></svg>
+      <span>想买</span>
+    </button>
+  </nav>
+
+  <script src="vendor/pinyin-pro.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
