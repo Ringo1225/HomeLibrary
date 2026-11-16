@@ -136,7 +136,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .bar-axis { display: flex; gap: 4px; margin-top: 6px; }
 .bar-axis span { flex: 1; text-align: center; font-size: 10px; color: var(--ink-3); white-space: nowrap; overflow: hidden; }
 
-.cats { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 -18px; padding: 2px 18px 4px; }
+.cats { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 -6px; padding: 2px 28px 4px 6px;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
 .cats::-webkit-scrollbar { display: none; }
 .cat { flex: none; width: 62px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
 .cat .o { width: 52px; height: 52px; border-radius: 50%; background: var(--card-hi); box-shadow: var(--shadow); display: grid; place-items: center; font-size: 17px; font-weight: 700; color: var(--ink); position: relative; }
@@ -152,7 +153,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 70%, #fff), var(--accent)); }
 .prog-row .miss { font-size: 12px; color: var(--accent); margin-top: 4px; }
 
-.strip { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; margin: 0 -18px; padding: 4px 18px 8px; scroll-snap-type: x mandatory; }
+.strip { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; margin: 0 -6px; padding: 4px 28px 8px 6px; scroll-padding-inline: 6px; scroll-snap-type: x mandatory;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
 .strip::-webkit-scrollbar { display: none; }
 .strip .cv { flex: none; width: 112px; scroll-snap-align: start; }
 
@@ -363,7 +365,7 @@ body.has-rail main { padding-right: 22px; }
 .fact a { color: var(--accent); text-underline-offset: .15em; }
 .rel h3 { font-size: 15px; font-weight: 700; margin: 20px 0 10px; }
 .rel .strip, .rel .spine-strip { margin-inline: 0; }
-.rel .strip { padding: 4px 4px 8px; }
+.rel .strip { padding-block: 4px 8px; }
 .rel .strip .cv { width: 96px; }
 
 .fade { animation: fade .3s ease both; }
