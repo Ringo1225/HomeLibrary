@@ -5,3 +5,7 @@ photos/done/*
 !photos/done/.gitkeep
 .DS_Store
 .claude/
+
+# Local design mockups and the fonts only they use
+design/
+vendor/fonts/
