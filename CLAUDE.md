@@ -31,5 +31,10 @@ A static PWA (no build step) the family opens on their phones to look up which b
 6. Run `node scripts/validate.mjs`; it must pass. Move the photos to `photos/done/` (prefix the filename with the date).
 7. Report to the user: N books added, M to verify (list them), skipped duplicates, newly found set gaps.
 
+## Publishing
+- Live site: https://ringo1225.github.io/HomeLibrary/ (GitHub Pages, public repo Ringo1225/HomeLibrary, `main` branch root).
+- To publish: run validate, then `git commit` + `git push`; Pages rebuilds in about 30 seconds.
+- Photos are git-ignored and never uploaded; the `source` field in books.json is only a local path.
+
 ## Local preview
 `python3 -m http.server 8765` (the service worker needs http, not file://).
