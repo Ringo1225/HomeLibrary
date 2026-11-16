@@ -5,7 +5,7 @@ A static PWA (no build step) the family opens on their phones to look up which b
 ## Files
 - `data/books.json`: the only catalog source. `data/series.json`: total volume counts, used to work out missing volumes.
 - `index.html` / `app.js` / `style.css`: the page. `vendor/pinyin-pro.js` (v3.26.0, kept locally so search works offline): pinyin search.
-- `sw.js`: offline cache. **When you change any app shell file, bump `VERSION`.** Data files are fetched network-first, so data-only changes don't need a bump.
+- `sw.js`: offline cache. **When you change any app shell file, bump `VERSION`, and bump the `?v=` on `style.css` / `app.js` in index.html (and in sw.js `SHELL`).** Data files are fetched network-first, so data-only changes don't need a bump.
 - `scripts/validate.mjs`: data checks. `scripts/make_icons.py`: regenerates the icons.
 
 ## Book fields
